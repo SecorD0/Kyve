@@ -181,14 +181,14 @@ main() {
 		local jailed="false"
 	fi
 	
-	local delegated=`bc -l <<< "$(jq -r ".tokens" <<< "$node_info")/1000000" 2>/dev/null`
+	local delegated=`bc -l <<< "$(jq -r ".tokens" <<< "$node_info")/1000000000" 2>/dev/null`
 	local voting_power=`jq -r ".ValidatorInfo.VotingPower" <<< "$status"`
 	if [ -n "$wallet_address" ]; then
 		local balance_rpc=`sed -e "s%http://%%; s%https://%%; s%tcp://%%" <<< "$global_rpc"`
 		if [ "$catching_up" = "false" ] || ! grep -q ":" <<< "$balance_rpc"; then
 			local balance_rpc="$local_rpc"
 		fi
-		local balance=`bc -l <<< "$($daemon query bank balances "$wallet_address" -oj --node "$balance_rpc" 2>/dev/null | jq -r ".balances[0].amount")/1000000" 2>/dev/null`
+		local balance=`bc -l <<< "$($daemon query bank balances "$wallet_address" -oj --node "$balance_rpc" 2>/dev/null | jq -r ".balances[0].amount")/1000000000" 2>/dev/null`
 	fi
 
 	# Output
